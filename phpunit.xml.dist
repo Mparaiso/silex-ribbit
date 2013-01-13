@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<phpunit backupGlobals='false'
+    bootstrap="./tests/bootstrap.php"
+    backupStaticAttributes="false"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    syntaxCheck="true">
+    <testsuites>
+        <testsuite name="Ribbit test suit">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -17,5 +17,5 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
 
     return $twig;
 }));
-
+require_once("services.php");
 return $app;

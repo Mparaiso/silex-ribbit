@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet/less" href="{{app.request.basePath}}/style.less">
+        <script src="{{app.request.basePath}}/less.js"></script>
+    </head>
+    <body>
+        <header>
+            <div class="wrapper">
+                <img src="/gfx/logo.png">
+                <span>Twitter Clone</span>
+            </div>
+        </header>
+        <div id="content">
+            <div class="wrapper">
+                {% for type,message in app.session.getFlashBag().all() %}
+                    <div class='flash {{type}}'>{{message}}</div>
+                {% endfor %}
+                {% block content %}default content please override in child templates {% endblock %}
+                </div>
+            </div>
+            <footer>
+                <div class="wrapper">
+                    Ribbit - A Twitter Clone Tutorial<img src="/gfx/logo-nettuts.png">
+                </div>
+            </footer>
+            {%include 'common/google_analytics.twig' %}
+        </body>
+    </html>
