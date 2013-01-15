@@ -1,14 +1,18 @@
 #!/usr/bin/env php
 <?php
-
+/*
+ * EN : Console Application setup and bootstrap
+ * Allows interacting with the app in the command line interface
+ */
+// env variables
 require_once __DIR__ . '/.env.php';
-
+// autoloader
 require_once __DIR__ . '/vendor/autoload.php';
-
+// application
 require __DIR__ . '/src/app.php';
-
+// dev config
 require __DIR__ . '/config/dev.php';
-
+// console object
 $console = require __DIR__ . '/src/console.php';
-
+// run
 $console->run();
