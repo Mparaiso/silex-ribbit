@@ -18,5 +18,6 @@ $console
         // do something
     })
 ;
+   
 
 return $console;

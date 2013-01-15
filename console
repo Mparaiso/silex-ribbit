@@ -1,9 +1,13 @@
 #!/usr/bin/env php
 <?php
+require_once __DIR__.'/.env.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
-require_once __DIR__.'/vendor/autoload.php';
+$app = require __DIR__ . '/src/app.php';
+require __DIR__ . '/config/dev.php';
+$console = require __DIR__ . '/src/console.php';
+$console->setHelperSet(new \Symfony\Component\Console\Helper\HelperSet(
+        array("em" => $app["em"],))
+);
 
-$app = require __DIR__.'/src/app.php';
-require __DIR__.'/config/dev.php';
-$console = require __DIR__.'/src/console.php';
 $console->run();

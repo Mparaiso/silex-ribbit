@@ -18,10 +18,11 @@
         "symfony/translation": "2.1.*",
         "symfony/twig-bridge": "2.1.*",
         "symfony/validator": "2.1.*",
-        "doctrine/dbal":"2.3.2"
+        "doctrine/dbal": "2.3.2",
+        "doctrine/orm": "2.3.2"
     },
     "minimum-stability": "dev",
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": {"": "src/"}
     }
 }

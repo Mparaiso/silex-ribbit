@@ -1,6 +1,7 @@
 /vendor/
 /cache/
 /log/
+/nbproject/
 silex.log
-
+.env.php
 /nbproject/private/
