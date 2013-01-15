@@ -11,12 +11,12 @@ use Silex\Provider\DoctrineServiceProvider;
 use Silex\Application;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
-use Ribbit\BLL\UserManager;
-use Ribbit\DAL\UserProvider;
+use Ribbit\BusinessLogicLayer\UserManager;
+use Ribbit\DataAccessLayer\DoctrineUserProvider;
 
 /* @var $app Silex\Application */
 $app["user_provider"] = $app->share(function(Application $app) {
-            return new UserProvider($app["db"]);
+            return new DoctrineUserProvider($app["em"]);
         }
 );
 # EN : custom services
@@ -27,25 +27,30 @@ $app["user_manager"] = $app->share(function(Application $app) {
 
 $app["em"] = $app->share(
         function(Application $app) {
+    
+            $s = DIRECTORY_SEPARATOR;
+            
+            $app["em.is_dev_mode"] = $app['debug'];
+            $app["em.metadata_folders"] = array(__DIR__ . $s . "Ribbit" . $s . "Entity" . $s);
+            $app["em.proxy_dir"] = dirname(__DIR__) . $s . "cache";
 
-            $app["em.is_dev_mode"] = true;
-            $app["em.metadata_folder"] = __DIR__ . "/Ribbit/Entities";
+            /** @var $app["em.config"] \Doctrine\ORM\Configuration * */
             $app["em.config"] = Setup::createAnnotationMetadataConfiguration(
-                            array(
-                                $app["em.metadata_folder"]
-                                , $app["em.is_dev_mode"]
-                            )
+                            $app["em.metadata_folders"]
+                            , $app["em.is_dev_mode"]
+                            , $app["em.proxy_dir"]
             );
-
+            
             $app["em.options"] = array(
                 "host" => getenv("RIBBIT_HOST"),
-                "database" => getenv("RIBBIT_DATABASE"),
-                "username" => getenv("RIBBIT_USERNAME"),
+                "dbname" => getenv("RIBBIT_DATABASE"),
+                "user" => getenv("RIBBIT_USERNAME"),
                 "password" => getenv("RIBBIT_PASSWORD"),
                 "driver" => getenv("RIBBIT_DRIVER"),
             );
 
-            return EntityManager::create($app["em.options"], $app["em.config"]);
+            $em =  EntityManager::create($app["em.options"], $app["em.config"]);
+            return $em;
         }
 );
 

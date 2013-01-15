@@ -1,8 +1,15 @@
 <?php
-namespace Ribbit\Entities;
+
+namespace Ribbit\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
+
+/**
+ * @Entity @Table(name="users")
+ **/
 class User{
-    /** @Id @Column(type="integer") @GeneratedValue**/
+
+    /** @Id @Column(type="integer") @GeneratedValue **/
     protected $id;
     /** @Column(type="string") **/
     protected $username;
@@ -24,7 +31,7 @@ class User{
     /** @Column(type="datetime") **/
     protected $lastLogin;
 
-    /** @ManyToMany(targetEntity="Role") @var Role[] **/
+    /** @ManyToMany(targetEntity="Role") **/
     protected $roles=null;
 
     function getUsername(){return $this->username;}

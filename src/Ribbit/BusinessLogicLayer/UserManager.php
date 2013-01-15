@@ -4,12 +4,12 @@
  * @author M.Paraiso
  */
 
-namespace Ribbit\BLL;
+namespace Ribbit\BusinessLogicLayer;
 
-use Ribbit\DTO\User;
-use Ribbit\DAL\IUserProvider;
+use Ribbit\Entity\User;
+use Ribbit\DataAccessLayer\IUserProvider;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use \Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Silex\Application;
 
 class UserManager implements UserProviderInterface {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ribbit\DAL;
+namespace Ribbit\DataAccessLayer;
 
-use \Ribbit\DTO\User;
+use Ribbit\Entity\User;
 
 interface IUserProvider {
 
@@ -14,8 +14,8 @@ interface IUserProvider {
     function getByUsername($username);
 
     /**
-     * @return \Ribbit\DTO\User
-     * @param \Ribbit\DTO\User $user
+     * @return User
+     * @param User $user
      */
     function create(User $user);
 }

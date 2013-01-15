@@ -2,6 +2,6 @@
 /cache/
 /log/
 /nbproject/
+cli-config.php
 silex.log
 .env.php
-/nbproject/private/
