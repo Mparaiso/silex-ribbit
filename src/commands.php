@@ -10,6 +10,9 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
 
+/* @var Doctrine\ORM\EntityManager $em  */
+$em = $app["em"];
+
 $console
         ->register('ribbit:create-user')
         ->setDefinition(array(
@@ -19,7 +22,7 @@ $console
             new InputOption('password', "p", InputOption::VALUE_REQUIRED, 'user password'),
         ))
         ->setDescription('create a new user with default values')
-        ->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
+        ->setCode(function (InputInterface $input, OutputInterface $output) use ($em) {
                     $output->writeln("creating user");
                     $output->writeln(print_r($input->getOptions(), true));
                 }
@@ -31,13 +34,13 @@ $console->register("ribbit:create-role")
             new InputOption("title", "t", InputOption::VALUE_REQUIRED, "role's title"),
         ))
         ->setDescription('create a new role')
-        ->setCode(function(InputInterface $input, OutputInterface $output)use($app) {
+        ->setCode(function(InputInterface $input, OutputInterface $output)use($em) {
                     $options = $input->getOptions();
                     $role = new Ribbit\Entity\Role();
                     if ($options["title"]) {
                         $role->setTitle($options["title"]);
-                        $app["em"]->persist($role);
-                        $app["em"]->flush();
+                        $em->persist($role);
+                        $em->flush();
                         $output->writeln("Role {$role->getTitle()} created with ID {$role->getId()}.");
                         return 0;
                     } else {
@@ -50,8 +53,7 @@ $console->register("ribbit:create-role")
 // FR : lister les roles
 $console->register("ribbit:list-roles")
         ->setDescription("list roles")
-        ->setCode(function(InputInterface $input, OutputInterface $output)use($app) {
-                    $em = $app["em"];
+        ->setCode(function(InputInterface $input, OutputInterface $output)use($em) {
                     /** @var $em \Doctrine\ORM\EntityManager */
                     $roles = $em->getRepository("Ribbit\Entity\Role")->findAll();
                     foreach ($roles as $role) {
@@ -61,8 +63,8 @@ $console->register("ribbit:list-roles")
 );
 
 $console->setHelperSet(new HelperSet(array(
-    "em" => new EntityManagerHelper($app["em"]),
-    "db" => new ConnectionHelper($app["em"]->getConnection()),
+    "em" => new EntityManagerHelper($em),
+    "db" => new ConnectionHelper($em->getConnection()),
         )
         )
 );

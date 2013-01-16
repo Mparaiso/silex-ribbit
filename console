@@ -3,6 +3,7 @@
 /*
  * EN : Console Application setup and bootstrap
  * Allows interacting with the app in the command line interface
+ * 
  */
 // env variables
 require_once __DIR__ . '/.env.php';

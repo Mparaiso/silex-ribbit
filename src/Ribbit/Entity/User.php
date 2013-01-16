@@ -15,10 +15,10 @@ class User{
     protected $username;
     /** @Column(type="string") **/
     protected $name;
-    /** @Column(type="string") **/
+    /** @Column(type="string",nullable=TRUE) **/
     protected $email;
 
-    /** @Column(type="string") **/
+    /** @Column(type="string",nullable=TRUE) **/
     protected $password;
     /** @Column(type="string") **/
     protected $passwordDigest;
@@ -28,12 +28,13 @@ class User{
     protected $createdAt;
     /** @Column(type="datetime") **/
     protected $updatedAt;
-    /** @Column(type="datetime") **/
+    /** @Column(type="datetime",nullable=TRUE) **/
     protected $lastLogin;
 
     /** @ManyToMany(targetEntity="Role") **/
     protected $roles=null;
 
+    function getId(){return $this->id;}
     function getUsername(){return $this->username;}
     function getName(){return $this->name;}
     function getEmail(){return $this->email;}

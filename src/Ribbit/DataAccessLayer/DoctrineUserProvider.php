@@ -6,7 +6,7 @@
 
 namespace Ribbit\DataAccessLayer;
 
-use Ribbit\Entity\User;
+use Ribbit\Entity\User as User;
 use \Doctrine\ORM\EntityManager;
 
 /**
@@ -25,8 +25,9 @@ class DoctrineUserProvider implements IUserProvider {
      */
     protected $user_class;
 
-    public function __construct(EntityManager $em) {
+    public function __construct(EntityManager $em,$user_class="Ribbit\Entity\User") {
         $this->em = $em;
+        $this->user_class = $user_class;
     }
 
     public function create(User $user) {
@@ -36,7 +37,7 @@ class DoctrineUserProvider implements IUserProvider {
     }
 
     public function getByUsername($username) {
-        return $this->em->getRepository($class_name)->findBy(array("username"=>$username));
+        return $this->em->getRepository($this->user_class)->findBy(array("username"=>$username));
     }
 
   
