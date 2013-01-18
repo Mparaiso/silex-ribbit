@@ -1,16 +1,15 @@
 {% if error is defined %}
 <div>{{ error }}</div>
 {% endif %}
-<form action="{{path('login_check')}}" method="POST">
-    <input placeholder="login" 
-           type="text" id="username" name="_username" 
-           value="{{last_username | default("") }}" />
-    <input placeholder="password" type="password" 
-           id="password" 
-           name="_password" />
-    {#
-        @note @silex FR : controller l'url en cas de success 
-        <input type="hidden" name="_target_path"  value="account" />
-    #}
-<input style="width:0;height:0;border:none;" type="submit" value="submit"/>
+<form action="{{path('users_authenticate')}}" method="POST">
+  <input placeholder="login" 
+  type="text" id="username" name="_username" 
+  value="{{last_username | default("") }}" />
+  <input placeholder="password" type="password" 
+  id="password" 
+  name="_password" />
+  {# @note @silex FR : controller l'url en cas de success <input type="hidden" name="_target_path"  value="account" /> #}
+  <input type="hidden" name="login_failed_forward" 
+  value="{{login_failed_forward | default('home')}}">
+  <input style="width:0;height:0;border:none;" type="submit" value="submit"/>
 </form>

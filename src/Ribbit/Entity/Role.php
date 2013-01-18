@@ -25,4 +25,8 @@ class Role {
         $this->title = $val;
     }
 
+    function __toString(){
+        return $this->title;
+    }
+
 }

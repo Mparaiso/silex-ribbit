@@ -9,27 +9,37 @@ use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Symfony\Component\HttpFoundation\Response;
-
 use Ribbit\BusinessLogicLayer\UserManager;
 use Ribbit\DataAccessLayer\DoctrineUserProvider;
 use Ribbit\Services\Provider\DoctrineORMServiceProvider;
 use Ribbit\Controllers\UserController;
 use Ribbit\Controllers\IndexController;
+use Ribbit\Controllers\Admin\UserAdminController;
 use Ribbit\Services\SQLLogger\MonologSQLLogger;
+use Ribbit\DataAccessLayer\DoctrineRoleProvider;
+use Ribbit\BusinessLogicLayer\RoleManager;
 
 $app = new Application();
 ### BEGINCUSTOMCODE 
-$app["debug"]=true;
+$app["debug"] = true;
+$app["void"]= $app->protect(function(){});
 $app["current_time"] = function() {
             return date('Y-m-d H:i:s', time());
         };
+$app["role_provider"] = $app->share(function(Application $app) {
+            return new DoctrineRoleProvider($app["em"]);
+        });
+$app["role_manager"] = $app->share(function(Application $app) {
+            return new RoleManager($app["role_provider"]);
+        });
 $app["user_provider"] = $app->share(function(Application $app) {
             return new DoctrineUserProvider($app["em"]);
         }
 );
 # EN : custom services
 $app["user_manager"] = $app->share(function(Application $app) {
-            return new UserManager($app["user_provider"], $app);
+            $userManager = new UserManager($app["user_provider"], $app["security.encoder_factory"]);
+            return $userManager;
         }
 );
 // FR : Enrigistrement des services providers
@@ -37,8 +47,8 @@ $app["user_manager"] = $app->share(function(Application $app) {
 $app->register(new FormServiceProvider());
 $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
-$app->register(new TranslationServiceProvider(),array(
-    "locale_fallback"=>"en",
+$app->register(new TranslationServiceProvider(), array(
+    "locale_fallback" => "en",
 ));
 $app->register(new TwigServiceProvider(), array(
     'twig.path' => array(__DIR__ . '/templates'),
@@ -85,6 +95,7 @@ $app->register(new SecurityServiceProvider(), array(
             "form" => array(
                 "login_path" => "/users/login",
                 "check_path" => "/admin/users/authenticate",
+                "default_target_path" => "/admin/users/profile",
             ),
             "logout" => array(
                 "logout_path" => "/admin/users/logout",
@@ -100,8 +111,8 @@ $app->register(new SecurityServiceProvider(), array(
     "security.role_hierarhy" => array(
         "ROLE_USER" => array(),
     ),
-    "security.acess_rules" => array(
-        array("^/admin/", "ROLE_USER"),
+    "security.access_rules" => array(
+        array("^/admin", "ROLE_USER"),
     )
 ));
 
@@ -117,8 +128,8 @@ $app->error(function (\Exception $e, $code) use ($app) {
         });
 
 $app->mount("/users", new UserController());
-$app->post("/admin/users/authenticate",function(){})->bind("login_check");
-$app->mount("/",new IndexController());
+$app->mount("/admin/users", new UserAdminController());
+$app->mount("/", new IndexController());
 
 ### ENDCUSTOMCODE
 return $app;

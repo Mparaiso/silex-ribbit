@@ -12,7 +12,7 @@ interface IUserProvider {
      * @return User user
      */
     function getByUsername($username);
-
+    function getByEmail($email);
     /**
      * @return User
      * @param User $user

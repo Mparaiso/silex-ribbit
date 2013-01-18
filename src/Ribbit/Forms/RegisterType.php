@@ -19,7 +19,7 @@ class RegisterType extends AbstractType {
             'first_options' => array('label' => " ","attr"=>array("placeholder"=>"password")),
             'second_options' => array('label' => " ","attr"=>array("placeholder"=>"verify password")),
         ));
-        $builder->add("agreement", 'checkbox', array('label' => "I agree with the condition of use"));
+        //$builder->add("agreement", 'checkbox', array('label' => "I agree with the condition of use"));
     }
 
     public function getName() {

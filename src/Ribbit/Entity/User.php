@@ -2,6 +2,8 @@
 
 namespace Ribbit\Entity;
 
+use Ribbit\Entity\Ribbit;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -32,9 +34,6 @@ class User implements UserInterface{
     protected $password;
 
     /** @Column(type="string") * */
-    protected $passwordDigest;
-
-    /** @Column(type="string") * */
     protected $salt;
 
     /** @Column(type="datetime") * */
@@ -48,6 +47,12 @@ class User implements UserInterface{
 
     /** @ManyToMany(targetEntity="Role") * */
     protected $roles = null;
+
+    /** 
+     * @OneToMany(targetEntity="Ribbit",mappedBy="user")
+     * @var Ribbit[]
+     */
+    protected $ribbits=null;
     
     function getId() {
         return $this->id;
@@ -70,15 +75,11 @@ class User implements UserInterface{
     }
 
     function getRoles() {
-        return $this->roles;
+        return array("ROLE_USER");
     }
 
     function getPassword() {
         return $this->password;
-    }
-
-    function getPasswordDigest() {
-        return $this->passwordDigest;
     }
 
     function getSalt() {
@@ -113,16 +114,8 @@ class User implements UserInterface{
         $this->avatarUrl = $val;
     }
 
-    function setRoles($val) {
-        $this->roles = $val;
-    }
-
     function setPassword($val) {
         $this->password = $val;
-    }
-
-    function setPasswordDigest($val) {
-        $this->passwordDigest = $val;
     }
 
     function setSalt($val) {
@@ -143,10 +136,7 @@ class User implements UserInterface{
 
     function __construct() {
         $this->roles = new ArrayCollection();
-    }
-
-    function addRole($role) {
-        $this->roles[] = $role;
+        $this->ribbits = new ArrayCollection();
     }
 
     /**
@@ -163,13 +153,17 @@ class User implements UserInterface{
      */
     function createAvatarUrl() {
         $this->avatarUrl =
-                "http://www.gravatar.com/avatar/#"
+                "http://www.gravatar.com/avatar/"
                 . md5($this->email)
                 . "?s=50";
     }
 
     public function eraseCredentials() {
-        
+        $this->password = null;
+    }
+
+    public function addRibbit(Ribbit $ribbit){
+        $this->ribbits[]=$ribbit;
     }
 
 }

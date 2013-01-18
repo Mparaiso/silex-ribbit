@@ -41,5 +41,9 @@ class DoctrineUserProvider implements IUserProvider {
         return $this->em->getRepository($this->user_class)->findOneBy(array("username" => $username));
     }
 
+    public function getByEmail($email){
+        return $this->em->getRepository($this->user_class)->findOneBy(array("email"=>$email));
+    }
+
 }
 

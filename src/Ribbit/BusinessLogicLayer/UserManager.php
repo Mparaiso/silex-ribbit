@@ -10,20 +10,25 @@ use Ribbit\Entity\User;
 use Ribbit\DataAccessLayer\IUserProvider;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Silex\Application;
+use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 class UserManager implements UserProviderInterface {
 
     /**
-     * @var Ribbit\DAL\IUserProvider $userProvider
+     * @var \Ribbit\DAL\IUserProvider $userProvider
      */
     protected $userProvider;
-    
-    protected $app;
 
-    function __construct(IUserProvider $userProvider, Application $app) {
+    /**
+     * @var \Symfony\Component\Security\Core\Encoder\EncoderFactory
+     */
+    protected $encoderFactory;
+    protected $logger;
+
+    function __construct(IUserProvider $userProvider, EncoderFactory $encoderFactory) {
         $this->userProvider = $userProvider;
-        $this->app = $app;
+        $this->encoderFactory = $encoderFactory;
     }
 
     /**
@@ -31,7 +36,11 @@ class UserManager implements UserProviderInterface {
      * @param string $username
      */
     public function loadUserByUsername($username) {
-        return$this->userProvider->getByUsername($username);
+        return $this->userProvider->getByUsername($username);
+    }
+
+    public function getByEmail($email) {
+        return $this->userProvider->getByEmail($email);
     }
 
     public function refreshUser(UserInterface $user) {
@@ -48,7 +57,22 @@ class UserManager implements UserProviderInterface {
     }
 
     public function register(User $user) {
+        $this->setUserSalt($user);
+        $password = $this->encodePassword($user);
+        $user->setPassword($password);
+        $user->setCreatedAt(new \DateTime('now'));
+        $user->setUpdatedAt(new \DateTime('now'));
+        $user->eraseCredentials();
         return $this->userProvider->create($user);
+    }
+
+    function encodePassword(User $user) {
+        return $this->encoderFactory->getEncoder($user)
+                        ->encodePassword($user->getPassword(), $user->getSalt());
+    }
+
+    function setUserSalt(User $user) {
+        $user->setSalt(md5(time()));
     }
 
 }
