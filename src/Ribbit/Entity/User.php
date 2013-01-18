@@ -48,11 +48,28 @@ class User implements UserInterface{
     /** @ManyToMany(targetEntity="Role") * */
     protected $roles = null;
 
+    /** @ManyToMany(targetEntity="User",mappedBy="followee") */
+    protected $followers = null;
+
+    /** @ManyToMany(targetEntity="User",inversedBy="followers") 
+     *  @JoinTable(name="follows",joinColumns={@JoinColumn(name="user_id",referencedColumnName="id")},
+     *  inverseJoinColumns={@JoinColumn(name="followee_id",referencedColumnName="id")})
+     */
+    protected $followee = null;
+
     /** 
      * @OneToMany(targetEntity="Ribbit",mappedBy="user")
      * @var Ribbit[]
      */
     protected $ribbits=null;
+
+    function __construct() {
+        $this->roles = new ArrayCollection();
+        $this->ribbits = new ArrayCollection();
+        $this->followee = new ArrayCollection();
+        $this->followers = new ArrayCollection();
+    }
+
     
     function getId() {
         return $this->id;
@@ -134,11 +151,6 @@ class User implements UserInterface{
         $this->lastLogin = $val;
     }
 
-    function __construct() {
-        $this->roles = new ArrayCollection();
-        $this->ribbits = new ArrayCollection();
-    }
-
     /**
      * @PrePersist @PreUpdate
      */
@@ -153,9 +165,9 @@ class User implements UserInterface{
      */
     function createAvatarUrl() {
         $this->avatarUrl =
-                "http://www.gravatar.com/avatar/"
-                . md5($this->email)
-                . "?s=50";
+        "http://www.gravatar.com/avatar/"
+        . md5($this->email)
+        . "?s=50";
     }
 
     public function eraseCredentials() {
