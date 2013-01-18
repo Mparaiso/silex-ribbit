@@ -6,28 +6,20 @@ use Silex\Provider\UrlGeneratorServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
-use Silex\Provider\DoctrineServiceProvider;
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManager;
+use Silex\Provider\FormServiceProvider;
+use Silex\Provider\TranslationServiceProvider;
+use Symfony\Component\HttpFoundation\Response;
+
 use Ribbit\BusinessLogicLayer\UserManager;
 use Ribbit\DataAccessLayer\DoctrineUserProvider;
+use Ribbit\Services\Provider\DoctrineORMServiceProvider;
+use Ribbit\Controllers\UserController;
+use Ribbit\Controllers\IndexController;
 use Ribbit\Services\SQLLogger\MonologSQLLogger;
 
 $app = new Application();
-$app->register(new UrlGeneratorServiceProvider());
-$app->register(new ValidatorServiceProvider());
-$app->register(new TwigServiceProvider(), array(
-    'twig.path' => array(__DIR__ . '/../templates'),
-    'twig.options' => array('cache' => __DIR__ . '/../cache'),
-));
-$app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
-                    // add custom globals, filters, tags, ...
-
-                    return $twig;
-                }));
-
-
-/* @var $app Silex\Application */
+### BEGINCUSTOMCODE 
+$app["debug"]=true;
 $app["current_time"] = function() {
             return date('Y-m-d H:i:s', time());
         };
@@ -40,52 +32,43 @@ $app["user_manager"] = $app->share(function(Application $app) {
             return new UserManager($app["user_provider"], $app);
         }
 );
+// FR : Enrigistrement des services providers
+// EN : Service providers registration
+$app->register(new FormServiceProvider());
+$app->register(new UrlGeneratorServiceProvider());
+$app->register(new ValidatorServiceProvider());
+$app->register(new TranslationServiceProvider(),array(
+    "locale_fallback"=>"en",
+));
+$app->register(new TwigServiceProvider(), array(
+    'twig.path' => array(__DIR__ . '/templates'),
+    'twig.options' => array('cache' => __DIR__ . '/../cache'),
+));
+$app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
+                    // add custom globals, filters, tags, ...
 
-$app["em"] = $app->share(
-        function(Application $app) {
-
-            $s = DIRECTORY_SEPARATOR;
-
-            $app["em.is_dev_mode"] = $app['debug'];
-            $app["em.metadata_folders"] = array(__DIR__ . $s . "Ribbit" . $s . "Entity" . $s);
-            $app["em.proxy_dir"] = dirname(__DIR__) . $s . "cache";
-
-            /** @var $app["em.config"] \Doctrine\ORM\Configuration * */
-            $app["em.config"] = Setup::createAnnotationMetadataConfiguration(
-                            $app["em.metadata_folders"]
-                            , $app["em.is_dev_mode"]
-                            , $app["em.proxy_dir"]
-            );
-
-            if ($app["debug"] == true) {
-                $app["em.config"]->setSQLLogger(new MonologSQLLogger($app["logger"]));
-            }
-
-            $app["em.options"] = array(
-                "host" => getenv("RIBBIT_HOST"),
-                "dbname" => getenv("RIBBIT_DATABASE"),
-                "user" => getenv("RIBBIT_USERNAME"),
-                "password" => getenv("RIBBIT_PASSWORD"),
-                "driver" => getenv("RIBBIT_DRIVER"),
-                "memory" => true
-            );
-
-            $em = EntityManager::create($app["em.options"], $app["em.config"]);
-            return $em;
-        }
-);
-
-/* @var $app Silex\Application */
-$app->register(new DoctrineServiceProvider(), array(
-    "db.options" => array(
+                    return $twig;
+                }));
+$s = DIRECTORY_SEPARATOR;
+$app->register(new DoctrineORMServiceProvider(), array(
+    "em.options" => array(
         "host" => getenv("RIBBIT_HOST"),
-        "database" => getenv("RIBBIT_DATABASE"),
-        "username" => getenv("RIBBIT_USERNAME"),
+        "dbname" => getenv("RIBBIT_DATABASE"),
+        "user" => getenv("RIBBIT_USERNAME"),
         "password" => getenv("RIBBIT_PASSWORD"),
         "driver" => getenv("RIBBIT_DRIVER"),
-    )
+        "memory" => true
+    ),
+    "em.logger" => $app->share(function($app) {
+                return new MonologSQLLogger($app["logger"]);
+            }),
+    "em.metadata" => array(
+        "type" => "annotation",
+        "path" => array(__DIR__ . $s . "Ribbit" . $s . "Entity" . $s),
+    ),
+    "em.proxy_dir" => dirname(__DIR__) . $s . "cache",
+    "em.is_dev_mode" => $app["debug"]
 ));
-
 $app->register(new SessionServiceProvider(), array(
     "session.storage_options" => array(
         "httponly" => true,
@@ -100,32 +83,42 @@ $app->register(new SecurityServiceProvider(), array(
             "anonymous" => array(),
             'pattern' => '^/',
             "form" => array(
-                "login_path" => "/login",
-                "check_path" => "/account/login_check",
+                "login_path" => "/users/login",
+                "check_path" => "/admin/users/authenticate",
             ),
             "logout" => array(
-                "logout_path" => "/account/logout",
+                "logout_path" => "/admin/users/logout",
                 "target" => "/",
                 "invalidate_session" => true,
                 "delete_cookies" => array()
             ),
             "users" => function(Application $app) {
-                return $app["auth_manager"];
+                return $app["user_manager"];
             }
         )
     ),
     "security.role_hierarhy" => array(
-        "ROLE_ADMIN" => array("ROLE_MODERATOR"), // super admin
-        "ROLE_MODERATOR" => array("ROLE_USER"), //
         "ROLE_USER" => array(),
     ),
     "security.acess_rules" => array(
-        array("^/account", "ROLE_USER"),
-        array("^/admin", "ROLE_MODERATOR"),
-        array("^/superadmin", "ROLE_ADMIN"),
+        array("^/admin/", "ROLE_USER"),
     )
 ));
 
-// EN : logger is already declared in config/dev.php file
+# CONTROLLERS
+$app->error(function (\Exception $e, $code) use ($app) {
+            if ($app['debug']) {
+                return;
+            }
 
+            $page = 404 == $code ? '404.html' : '500.html';
+
+            return new Response($app['twig']->render($page, array('code' => $code)), $code);
+        });
+
+$app->mount("/users", new UserController());
+$app->post("/admin/users/authenticate",function(){})->bind("login_check");
+$app->mount("/",new IndexController());
+
+### ENDCUSTOMCODE
 return $app;

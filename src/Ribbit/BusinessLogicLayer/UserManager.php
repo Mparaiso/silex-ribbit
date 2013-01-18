@@ -18,10 +18,12 @@ class UserManager implements UserProviderInterface {
      * @var Ribbit\DAL\IUserProvider $userProvider
      */
     protected $userProvider;
+    
+    protected $app;
 
     function __construct(IUserProvider $userProvider, Application $app) {
         $this->userProvider = $userProvider;
-        $this->$app = $app;
+        $this->app = $app;
     }
 
     /**
@@ -29,7 +31,7 @@ class UserManager implements UserProviderInterface {
      * @param string $username
      */
     public function loadUserByUsername($username) {
-        return $this->userProvider->getByUsername($username);
+        return$this->userProvider->getByUsername($username);
     }
 
     public function refreshUser(UserInterface $user) {
@@ -41,8 +43,12 @@ class UserManager implements UserProviderInterface {
      * @param User $user
      * @return bool
      */
-    public function supportsClass(User $user) {
+    public function supportsClass($user) {
         return is_a($user, "User");
+    }
+
+    public function register(User $user) {
+        return $this->userProvider->create($user);
     }
 
 }

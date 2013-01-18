@@ -9,14 +9,17 @@
     <body>
         <header>
             <div class="wrapper">
-                <img src="/gfx/logo.png">
+                <a href="{{app.request.basePath}}"><img src="/gfx/logo.png"></a>
                 <span>Twitter Clone</span>
+                {% block wrapper %}{% endblock %}
             </div>
         </header>
         <div id="content">
             <div class="wrapper">
-                {% for type,message in app.session.getFlashBag().all() %}
+                {% for type,messages in app.session.getFlashBag().all() %}
+                    {% for message in messages %}
                     <div class='flash {{type}}'>{{message}}</div>
+                    {% endfor %}
                 {% endfor %}
                 {% block content %}default content please override in child templates {% endblock %}
                 </div>

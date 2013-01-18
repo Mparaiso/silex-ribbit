@@ -1,0 +1,13 @@
+{% extends "layout.twig" %}
+{% block wrapper %}
+{% include 'users/login.twig' %}
+{% endblock %}
+{% block content %}
+<img src="{{app.request.basePath}}/gfx/frog.jpg">
+<div class="panel right">
+    <h1>New to Ribbit?</h1>
+    <p>
+        {% include 'forms/register.twig' %}
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+<form method="POST" action="{{path('users_register')}}">
+    {#<input name="username" type="text" placeholder="username"/>
+    <input type="text" placeholder="real name" name="name" />
+    <input name="email" type="email" placeholder="email"/>
+    <input name="password" type="text" placeholder="password"/>
+    <input name="password2" type="password" placeholder="verify password"/>
+    <input type="submit" value="Create Account"/>#}
+    {{form_widget(registrationForm.username)}}
+    {{form_widget(registrationForm.name)}}
+    {{form_widget(registrationForm.email)}}
+    {{form_widget(registrationForm.password_repeated)}}
+    <input type="hidden" name="forward" value="home">
+    <input type="submit" value="Create Account"/>
+</form>

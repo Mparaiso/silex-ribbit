@@ -1,72 +1,6 @@
 {
-    "hash": "e6e0307b53918857e3bd61c144303dea",
+    "hash": "e9e918111ddc95cf55fd4a62aaf5124e",
     "packages": [
-        {
-            "name": "dflydev/doctrine-orm-service-provider",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dflydev/dflydev-doctrine-orm-service-provider",
-                "reference": "b925a32d4657f34b33fb7c7406f6e830aee28192"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/dflydev/dflydev-doctrine-orm-service-provider/archive/b925a32d4657f34b33fb7c7406f6e830aee28192.zip",
-                "reference": "b925a32d4657f34b33fb7c7406f6e830aee28192",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3",
-                "doctrine/orm": ">=2.3,<3.0",
-                "pimple/pimple": "1.*@dev"
-            },
-            "require-dev": {
-                "cilex/cilex": "1.*@dev",
-                "silex/silex": "1.*@dev"
-            },
-            "suggest": {
-                "dflydev/psr0-resource-locator-service-provider": "1.0.*@dev"
-            },
-            "time": "2012-12-30 23:41:22",
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "installation-source": "source",
-            "autoload": {
-                "psr-0": {
-                    "Dflydev\\Cilex\\Provider\\DoctrineOrm": "src",
-                    "Dflydev\\Pimple\\Provider\\DoctrineOrm": "src",
-                    "Dflydev\\Silex\\Provider\\DoctrineOrm": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Dragonfly Development Inc.",
-                    "email": "info@dflydev.com",
-                    "homepage": "http://dflydev.com"
-                },
-                {
-                    "name": "Beau Simensen",
-                    "email": "beau@dflydev.com",
-                    "homepage": "http://beausimensen.com"
-                }
-            ],
-            "description": "Doctrine ORM Service Provider",
-            "keywords": [
-                "silex",
-                "orm",
-                "doctrine",
-                "pimple",
-                "cilex"
-            ]
-        },
         {
             "name": "doctrine/common",
             "version": "2.3.x-dev",
@@ -1167,12 +1101,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing",
-                "reference": "192243b2c5e36fc21e83fd63ab54582dcc31e7e4"
+                "reference": "81b5a5649b8b1fba057f3fdd5ca15cc3af822b66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Routing/archive/192243b2c5e36fc21e83fd63ab54582dcc31e7e4.zip",
-                "reference": "192243b2c5e36fc21e83fd63ab54582dcc31e7e4",
+                "url": "https://github.com/symfony/Routing/archive/81b5a5649b8b1fba057f3fdd5ca15cc3af822b66.zip",
+                "reference": "81b5a5649b8b1fba057f3fdd5ca15cc3af822b66",
                 "shasum": ""
             },
             "require": {
@@ -1190,7 +1124,7 @@
                 "symfony/config": "2.2.*",
                 "symfony/yaml": "2.2.*"
             },
-            "time": "2013-01-11 17:38:19",
+            "time": "2013-01-15 17:01:40",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1451,18 +1385,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/fabpot/Twig.git",
-                "reference": "3111e1265db1026323c589a5bd2d152871d7bbab"
+                "reference": "2a7d317cf95cfcd2a9106ad14e4864bbf8bd78a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Twig/archive/3111e1265db1026323c589a5bd2d152871d7bbab.zip",
-                "reference": "3111e1265db1026323c589a5bd2d152871d7bbab",
+                "url": "https://github.com/fabpot/Twig/archive/2a7d317cf95cfcd2a9106ad14e4864bbf8bd78a4.zip",
+                "reference": "2a7d317cf95cfcd2a9106ad14e4864bbf8bd78a4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
-            "time": "2013-01-08 16:56:12",
+            "time": "2013-01-15 20:09:30",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1501,7 +1435,7 @@
 
     ],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "dflydev/doctrine-orm-service-provider": 20
-    }
+    "stability-flags": [
+
+    ]
 }

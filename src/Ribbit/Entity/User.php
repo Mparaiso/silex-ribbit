@@ -4,13 +4,14 @@ namespace Ribbit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Exception\ValidatorException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Entity @Table(name="users")
  * @HasLifecycleCallbacks
  * @note @doctrine HasLifecyleCallback active la validation
  * */
-class User {
+class User implements UserInterface{
 
     /** @Id @Column(type="integer") @GeneratedValue * */
     protected $id;
@@ -47,7 +48,7 @@ class User {
 
     /** @ManyToMany(targetEntity="Role") * */
     protected $roles = null;
-
+    
     function getId() {
         return $this->id;
     }
@@ -165,6 +166,10 @@ class User {
                 "http://www.gravatar.com/avatar/#"
                 . md5($this->email)
                 . "?s=50";
+    }
+
+    public function eraseCredentials() {
+        
     }
 
 }
