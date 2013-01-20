@@ -14,7 +14,7 @@ class AdminController implements ControllerProviderInterface {
     /**
      * FR : affiche le profile utilisateur
      */
-    function userProfile(Application $app, Request $req) {
+    function profile(Application $app, Request $req) {
         /**
          * @note @silex FR : créer un formulaire avec le conteneur 
          * $app["form.factory"]->create(new AbstractType());
@@ -23,18 +23,19 @@ class AdminController implements ControllerProviderInterface {
         /* @var $ribbitCreateForm \Symfony\Component\Form\Form */
         $user = $app["security"]->getToken()->getUser();
         $ribbits = $app["ribbit_manager"]->findByUser($user);
-        return $app['twig']->render("admin/users/profile.twig",
+        return $app['twig']->render("admin_profile.twig",
             array("ribbits" => $ribbits,"user" => $user)
             );
     }
 
-    function publicProfiles(Application $app,Request $req){
+    function users(Application $app,Request $req){
         $users = $app["user_manager"]->findAll();
-        return $app["twig"]->render("admin.twig",array("users"=>$users));
+        return $app["twig"]->render("admin_users.twig",array("users"=>$users));
     }
 
-    function followeeRibbits(Application $app,Request $app){
-
+    function ribbits(Application $app,Request $req){
+        $ribbits = $app["ribbit_manager"]->findAll();
+        return $app["twig"]->render("admin_ribbits.twig",array("ribbits"=>$ribbits));
     }
 
     function publicRibbits(Application $app,Request $app){
@@ -51,14 +52,15 @@ class AdminController implements ControllerProviderInterface {
     /**
      * FR : la déconnexion est gérée par le SecurityServiceProvider
      */
-    function logout() {
-
+    function logout(Application $app) {
+        return $app->redirect($app["url_generator"]->generate("home"));
     }
 
     public function connect(Application $app) {
         $admin = $app["controllers_factory"];
-        $admin->match("/profile", array($this, "userProfile"))->bind("users_profile");
-        $admin->match("/users",array($this,"publicProfiles"))->bind("users_public");
+        $admin->match("/profile", array($this, "profile"))->bind("admin_profile");
+        $admin->match("/users",array($this,"users"))->bind("admin_users");
+        $admin->match("/ribbits",array($this,"ribbits"))->bind("admin_ribbits");
         $admin->post("/authenticate", array($this, "authenticate"))->bind("users_authenticate");
         $admin->post("/logout", array($this, "logout"))->bind("users_logout");
         return $admin;

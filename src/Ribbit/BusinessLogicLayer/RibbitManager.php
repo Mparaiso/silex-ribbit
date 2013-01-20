@@ -25,6 +25,10 @@ class RibbitManager {
         return $this->ribbitProvider->create($ribbit);
     }
     
+    function findAll(){
+        return $this->ribbitProvider->findAll();
+    }
+    
     public function findByUser(User $user){
         return $this->ribbitProvider->findByUser($user);
     }

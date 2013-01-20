@@ -1,0 +1,22 @@
+{% extends "layout.twig" %}
+{% block header %}
+{% include "admin_menu.twig" %}
+{% endblock %}
+{% block content %}
+<div id="createRibbit" class="panel right">
+    <h1>Create a Ribbit</h1>
+    <p>
+        {# @note @twig afficher le rendu d'une route dans un controller render(url) #}
+        {{ render(path("ribbit_create")) }}
+        </p>
+    </div>
+    <div id="ribbits" class="panel left">
+        <h1>Your Ribbit Profile</h1>
+{% include 'profile.twig' with {user:user} only %}
+    </div>
+    <div class="panel left">
+        <h1>Your Ribbits</h1>
+    {% include 'ribbits.twig' with {ribbits:ribbits} only %}
+    </div>
+{% endblock %}
+

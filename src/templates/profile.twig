@@ -1,0 +1,7 @@
+<div class="ribbitWrapper">
+    <img class="avatar" src="{{user.getAvatarUrl()}}">
+    <span class="name">{{user.getName()}}</span> @{{user.getUsername()}}
+    <p>
+         {{ user.getRibbits()|length}} Ribbits <span class="spacing">{{user.getFollowers()|length}} Followers</span><span class="spacing">{{ user.getFollowee()|length}} Following</span><br>
+        </p>
+    </div>

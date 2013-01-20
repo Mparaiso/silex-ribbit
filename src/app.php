@@ -28,7 +28,7 @@ $app = new Application();
 $app["debug"] = true;
 $app["mustBeAnonymous"] = $app->protect(function()use($app){
     if($app["security"]->isGranted('ROLE_USER')){
-        return $app->redirect($app["url_generator"]->generate("users_admin_profile"));
+        return $app->redirect($app["url_generator"]->generate("admin_profile"));
     }
 }
 );
@@ -115,13 +115,11 @@ $app->register(new SecurityServiceProvider(), array(
             'pattern' => '^/',
             "form" => array(
                 "login_path" => "/users/login",
-                "check_path" => "/admin/users/authenticate",
-                "default_target_path" => function(Application $app){
-                    return $app["url_generator"]->generate("users_admin_profile");
-                },
+                "check_path" => "/admin/authenticate",
+                "default_target_path" => "/admin/profile",
                 ),
             "logout" => array(
-                "logout_path" => "/admin/users/logout",
+                "logout_path" => "/admin/logout",
                 "target" => "/",
                 "invalidate_session" => true,
                 "delete_cookies" => array()
@@ -150,9 +148,10 @@ $app->error(function (\Exception $e, $code) use ($app) {
     return new Response($app['twig']->render($page, array('code' => $code)), $code);
 });
 
-$app->mount("/users", new UserController());
-$app->mount("/admin", new AdminController());
-$app->mount("/", new IndexController());
+$app->mount("/users", new UserController);
+$app->mount("/admin/ribbit",new RibbitController);
+$app->mount("/admin", new AdminController);
+$app->mount("/", new IndexController);
 
 ### ENDCUSTOMCODE
 return $app;

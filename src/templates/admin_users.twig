@@ -1,0 +1,20 @@
+{% extends "layout.twig" %}
+{% block header %}
+{% include "admin_menu.twig" %}
+{% endblock %}
+{% block content %}
+<div id="createRibbit" class="panel right">
+    <h1>Create a Ribbit</h1>
+    <p>
+        {# @note @twig afficher le rendu d'une route dans un controller render(url) #}
+        {{ render(path("ribbit_create")) }}
+        </p>
+    </div>
+    <div id="ribbits" class="panel left">
+        <h1>Public Profile</h1>
+        {% for user in users %}
+            {% include 'profile.twig' with {user:user} only %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
