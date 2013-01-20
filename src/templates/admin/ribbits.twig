@@ -6,10 +6,10 @@
 <div id="createRibbit" class="panel right">
     <h1>Create a Ribbit</h1>
     <p>
-        {# @note @twig afficher le rendu d'une route dans un controller render(url) #}
-        {{ render(path("ribbits_admin_create")) }}
+        {% include 'forms/ribbitCreateForm.twig' with {form:ribbitCreateForm,action:""} only %}
     </p>
 </div>
+{% if user is defined %}
 <div id="ribbits" class="panel left">
     <h1>Your Ribbit Profile</h1>
     <div class="ribbitWrapper">
@@ -20,9 +20,19 @@
      </p>
  </div>
 </div>
+{% endif %}
 <div class="panel left">
     <h1>Your Ribbits</h1>
-    {{ render(path("ribbits_admin_user",{id:user.getId()})) }}
+    {% for ribbit in ribbits %}
+    <div class="ribbitWrapper">
+        <img class="avatar" src="{{ribbit.getUser().getAvatarUrl()}}">
+        <span class="name">{{ ribbit.getUser().getUsername()}}</span> 
+        @{{ ribbit.getUser().getUsername()}} 
+        {# @note @twig afficher une date du type \DateTime avec un filtre #}
+        <span class="time">{{ ribbit.getCreatedAt()|date('y/m/d g:ia')}}</span>
+        <p>{{ ribbit.getRibbit() }}</p>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}
 

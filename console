@@ -11,8 +11,6 @@ require_once __DIR__ . '/.env.php';
 require_once __DIR__ . '/vendor/autoload.php';
 // application
 require __DIR__ . '/src/app.php';
-// dev config
-require __DIR__ . '/config/dev.php';
 // console object
 $console = require __DIR__ . '/src/console.php';
 // run

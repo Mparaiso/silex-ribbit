@@ -26,7 +26,7 @@ class DoctrineRibbitProvider implements IRibbitProvider {
 
     public function findByUser(User $user) {
         return $this->em->getRepository("Ribbit\Entity\Ribbit")
-                        ->findBy(array("user" => $user));
+                        ->findBy(array("user" => $user),array("createdAt"=>"DESC"));
     }
 
 }

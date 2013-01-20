@@ -39,13 +39,22 @@ class UserManager implements UserProviderInterface {
         return $this->userProvider->getByUsername($username);
     }
 
+    public function findAll(){
+        return $this->userProvider->findAll();
+    }
+
     public function getByEmail($email) {
         return $this->userProvider->getByEmail($email);
+    }
+
+    function getById($id){
+        return $this->userProvider->getById($id);
     }
 
     public function refreshUser(UserInterface $user) {
         return $this->loadUserByUsername($user->getUsername());
     }
+
 
     /**
      * 
@@ -57,6 +66,12 @@ class UserManager implements UserProviderInterface {
     }
 
     public function register(User $user) {
+        if($this->getByEmail($user->getEmail())){
+            throw new \Exception("Email {$user->getEmail()} already taken", 1);
+        }
+        if($this->loadUserByUsername($user->getUsername())){
+            throw new \Exception("Username {$user->getEmail()} already taken", 1);
+        }
         $this->setUserSalt($user);
         $password = $this->encodePassword($user);
         $user->setPassword($password);
@@ -69,6 +84,22 @@ class UserManager implements UserProviderInterface {
     function encodePassword(User $user) {
         return $this->encoderFactory->getEncoder($user)
                         ->encodePassword($user->getPassword(), $user->getSalt());
+    }
+
+    function setNewPassword(User $user, $newPassword) {
+        $this->setUserSalt($user);
+        $user->setPassword($newPassword);
+        $password = $this->encodePassword($user);
+        $user->setPassword($password);
+        $user->setUpdatedAt(new \DateTime("now"));
+        $newUser = $this->userProvider->update($user);
+        return $newUser;
+    }
+
+    function setNewPasswordByUsername($username, $newPassword) {
+        $user = $this->userProvider->getByUsername($username);
+        $modifiedUser = $this->setNewPassword($user, $newPassword);
+        return $modifiedUser;
     }
 
     function setUserSalt(User $user) {

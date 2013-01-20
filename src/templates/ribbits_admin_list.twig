@@ -1,0 +1,10 @@
+{% for ribbit in ribbits %}
+<div class="ribbitWrapper">
+    <img class="avatar" src="{{ribbit.getUser().getAvatarUrl()}}">
+    <span class="name">{{ ribbit.getUser().getUsername()}}</span> 
+    @{{ ribbit.getUser().getUsername()}} 
+    {# @note @twig afficher une date du type \DateTime avec un filtre #}
+    <span class="time">{{ ribbit.getCreatedAt()|date('y/m/d g:ia')}}</span>
+    <p>{{ ribbit.getRibbit() }}</p>
+</div>
+{% endfor %}

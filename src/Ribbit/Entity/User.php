@@ -17,22 +17,22 @@ class User implements UserInterface {
     /** @Id @Column(type="integer") @GeneratedValue * */
     protected $id;
 
-    /** @Column(type="string") * */
+    /** @Column(type="string",unique=TRUE) * */
     protected $username;
 
     /** @Column(type="string") * */
     protected $name;
 
-    /** @Column(type="string",nullable=TRUE) * */
+    /** @Column(type="string",unique=TRUE) * */
     protected $email;
 
     /** @Column(type="string",nullable=TRUE) * */
     protected $avatarUrl;
 
-    /** @Column(type="string",nullable=TRUE) * */
+    /** @Column(type="string") */
     protected $password;
 
-    /** @Column(type="string",nullable=TRUE) * */
+    /** @Column(type="string") * */
     protected $salt;
 
     /** @Column(type="datetime") * */
@@ -104,6 +104,14 @@ class User implements UserInterface {
     function getCreatedAt() {
         return $this->createdAt;
     }
+    
+    function getRibbits(){
+        return $this->ribbits;
+    }
+    
+    function getFollowee(){
+        return $this->followee;
+    }
 
     function getUpdatedAt() {
         return $this->updatedAt;
@@ -173,7 +181,7 @@ class User implements UserInterface {
     }
 
     public function eraseCredentials() {
-        $this->password = null;
+       // $this->password = null;
     }
 
     public function addRibbit(Ribbit $ribbit) {

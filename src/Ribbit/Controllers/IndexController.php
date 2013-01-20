@@ -14,13 +14,13 @@ class IndexController implements ControllerProviderInterface {
             $registrationForm->bindRequest($app["request"]);
         }
         return $app['twig']->render('home.twig', array(
-         "registrationForm" => $registrationForm->createView() ,
-         "login_failed_forward"=>"home"));
+           "registrationForm" => $registrationForm->createView() ,
+           "login_failed_forward"=>"home"));
     }
 
     public function connect(Application $app) {
         $index = $app["controllers_factory"];
-        $index->match("/", array($this, "index"))->bind("home");
+        $index->match("/", array($this, "index"))->bind("home")->before($app["mustBeAnonymous"]);
         return $index;
     }
 

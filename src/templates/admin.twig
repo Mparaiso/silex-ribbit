@@ -1,12 +1,11 @@
 {% extends "layout.twig" %}
 {% block header %}
-{% include "admin/users/admin_menu.twig" %}
+{% include "admin_menu.twig" %}
 {% endblock %}
 {% block content %}
 <div id="createRibbit" class="panel right">
     <h1>Create a Ribbit</h1>
     <p>
-        {# @note @twig afficher le rendu d'une route dans un controller render(url) #}
         {{ render(path("ribbits_admin_create")) }}
     </p>
 </div>
@@ -20,9 +19,11 @@
      </p>
  </div>
 </div>
+{% if ribbits is defined %}
 <div class="panel left">
     <h1>Your Ribbits</h1>
-    {{ render(path("ribbits_admin_user",{id:user.getId()})) }}
+    {% include 'ribbits_admin_list.twig' with {ribbits:ribbits} only %}
 </div>
+{% endif %}
 {% endblock %}
 

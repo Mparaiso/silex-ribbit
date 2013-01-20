@@ -36,12 +36,17 @@ class DoctrineUserProvider implements IUserProvider {
         $this->em->flush();
         return $user;
     }
+    
+    public function update(User $user){
+        $this->em->flush($user);
+        return $user;
+    }
 
     /**
      * 
      * @return \Ribbit\Entity\User[]
      */
-    function get(){
+    function findAll(){
         return $this->em->getRepository("Ribbit\Entity\User")->findAll();
     }
     
@@ -53,8 +58,12 @@ class DoctrineUserProvider implements IUserProvider {
         return $this->em->getRepository($this->user_class)->findOneBy(array("email"=>$email));
     }
 
+    public function getById($id){
+        return $this->em->find("Ribbit\Entity\User",$id);
+    }
+
     function getFollowerCount(User $user){
-        return count($this->getFollowers());
+        return count($user->getFollowers());
     }
     
     function getFollowers(User $user){

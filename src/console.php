@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Helper\HelperSet;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
-
 use Ribbit\Entity\User;
 
 $console = new Application('My Silex Application', 'n/a');
@@ -17,29 +16,70 @@ $console = new Application('My Silex Application', 'n/a');
 ### BEGINCUSTOMCODE
 /* @var Doctrine\ORM\EntityManager $em  */
 $em = $app["em"];
-$console
-        ->register('ribbit:register-user')
+/**
+ * FR : efface le fichier de logs
+ * EN : Erase log file
+ */
+$console->register("ribbit:log-delete")
+        ->setDefinition(array())
+        ->setDescription("Delete log file")
+        ->setCode(function(InputInterface $input, OutputInterface $output)use($app) {
+                    if (isset($app["monolog.logfile"])) {
+                        if (unlink($app["monolog.logfile"])) {
+                            $output->writeln("file {$app["monolog.logfile"]} removed successfully.");
+                        } else {
+                            $output->writeln("file {$app["monolog.logfile"]} not removed.");
+                        }
+                    } else {
+                        $output->writeln("no log file defined.");
+                    }
+                }
+);
+/**
+ * FR : créer un nouvel utilisateur
+ * EN : create a new user
+ */
+$console->register("ribbit:user-create")
+        ->setDefinition(array(
+            new InputOption("username", "u", InputOption::VALUE_REQUIRED, "username"),
+            new InputOption("email", "e", InputOption::VALUE_REQUIRED, "email"),
+            new InputOption("realname", "r", InputOption::VALUE_REQUIRED, "real name"),
+            new InputOption("password", "p", InputOption::VALUE_REQUIRED, "password"),
+        ))
+        ->setDescription("create a new user")
+        ->setCode(function(InputInterface $in, OutputInterface $out)use($app) {
+                    $user = new \Ribbit\Entity\User;
+                    $user->setEmail($in->getOption("email"));
+                    $user->setPassword($in->getOption("password"));
+                    $user->setUsername($in->getOption("username"));
+                    $user->setName($in->getOption("realname"));
+                    try {
+                        $app["user_manager"]->register($user);
+                        if ($user->getId()) {
+                            $out->writeln("User {$user->getUsername()} created with ID {$user->getId()}.");
+                            return 0;
+                        }
+                    } catch (Exception $e) {
+                        $out->writeln("Error creating user {$e->getMessage()}.");
+                        return 1;
+                    }
+                    $out->writeln("No user created.");
+                    return 0;
+                });
+$console->register('ribbit:user-password-change')
         ->setDefinition(array(
             new InputOption('username', "u", InputOption::VALUE_REQUIRED, 'user username'),
-            new InputOption('email', "e", InputOption::VALUE_REQUIRED, 'user email'),
-            new InputOption('name', "a", InputOption::VALUE_OPTIONAL, 'user realname'),
-            new InputOption('password', "p", InputOption::VALUE_OPTIONAL, 'user password',"password"),
-            new InputOption('salt', "s", InputOption::VALUE_OPTIONAL, 'password salt',"salt"),
+            new InputOption('password', "p", InputOption::VALUE_REQUIRED, 'user new password'),
         ))
-        ->setDescription('create a new user with default values')
+        ->setDescription('change the user password')
         ->setCode(function (InputInterface $input, OutputInterface $output) use ($app) {
-                    $output->writeln("creating user ".$input->getOption("username"));
-                    $user = new User();
-                    $user->setUsername($input->getOption("username"));
-                    $user->setName($input->getOption("name"));
-                    $user->setEmail($input->getOption("email"));
-                    $user->setPassword($input->getOption("password"));
-                    $user->setSalt($input->getOption("salt"));
-                    $newUser = $app["user_manager"]->register($user);
-                    if($newUser){
-                        $output->writeln("new user created with ID {$newUser->getId()}.");
-                    }else{
-                        $output->writeln("Error registering new user");
+                    $user = $app["user_manager"]->setNewPasswordByUsername($input->getOption("username"), $input->getOption("password"));
+                    if ($user == null) {
+                        $output->writeln("User with username '" . $input->getOption("username") . "' not found");
+                        return 1;
+                    } else {
+                        $output->writeln("User with username '" . $user->getUsername() . "' password's updated ");
+                        return 0;
                     }
                 }
 );

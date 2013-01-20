@@ -19,9 +19,9 @@ class Ribbit {
     protected $ribbit;
 
     /** @Column(type="datetime")
-     * @var \Datetime $createAt
+     * @var \Datetime $createdAt
      */
-    protected $createAt;
+    protected $createdAt;
 
     function setUser(User $user) {
         $user->addRibbit($this);
@@ -34,7 +34,7 @@ class Ribbit {
     }
     
     function setCreatedAt(\DateTime $datetime){
-        $this->createAt = $datetime;
+        $this->createdAt = $datetime;
         return $this;
     }
 
@@ -51,7 +51,7 @@ class Ribbit {
     }
     
     function getCreatedAt(){
-        return $this->createAt;
+        return $this->createdAt;
     }
 
 }

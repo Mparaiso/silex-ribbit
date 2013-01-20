@@ -21,32 +21,38 @@ class DoctrineORMServiceProvider implements ServiceProviderInterface {
             if ($app["em.metadata"]["type"] === "annotation") {
                 $app["em.config"] = function($app) {
                     return Setup::createAnnotationMetadataConfiguration(
-                        $app["em.metadata"]["path"]
-                        , $app["em.is_dev_mode"]
+                        $app["em.metadata"]["path"],
+                        $app["em.is_dev_mode"],
+                        $app["em.proxy_dir"]
                         );
                 };
             } elseif ($app["em.metadata"]["type"] === "xml") {
                 $app["em.config"] = function($app) {
                     return Setup::createXMLMetadataConfiguration(
-                        $app["em.metadata"]["path"], $app["em.is_dev_mode"]
+                        $app["em.metadata"]["path"],
+                        $app["em.is_dev_mode"],
+                        $app["em.proxy_dir"]
                         );
                 };
             } elseif ($app["em.metadata"]["type"] === "yaml") {
                 $app["em.config"] = function($app) {
                     return Setup::createYAMLMetadataConfiguration(
-                        $app["em.metadata"]["path"], $app["em.is_dev_mode"]);
+                        $app["em.metadata"]["path"],
+                        $app["em.is_dev_mode"],
+                        $app["em.proxy_dir"]);
                 };
             }
             if ($app["debug"] === true) {
                 $app["em.is_dev_mode"] = true;
             }
-            if ($app['em.logger']!=null) {
-                $app["em.config"]->setSQLLogger($app['em.logger']);
+            //if ($app["em.logger"]!=null) {
+            $app["em.config"]->setSQLLogger($app['em.logger']);
+            //}
+            $em = EntityManager::create($app["em.options"], $app["em.config"]);
+            if($app["em.logger"]){
+                $em->getConfiguration()->setSQLLogger($app["em.logger"]);
             }
-            if ($app["em.proxy_dir"]) {
-                $app["em.config"]->setProxyDir($app["em.proxy_dir"]);
-            }
-            return EntityManager::create($app["em.options"], $app["em.config"]);
+            return $em;
         }
         );
 }
