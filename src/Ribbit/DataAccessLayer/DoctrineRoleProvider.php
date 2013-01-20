@@ -4,6 +4,7 @@ namespace Ribbit\DataAccessLayer;
 
 use Doctrine\ORM\EntityManager;
 use Ribbit\Entity\Role;
+use Ribbit\DataAccessLayer\IRoleProvider;
 
 class DoctrineRoleProvider implements IRoleProvider{
 

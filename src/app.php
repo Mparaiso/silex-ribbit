@@ -8,6 +8,7 @@ use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
+use Silex\Provider\MonologServiceProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Ribbit\BusinessLogicLayer\UserManager;
 use Ribbit\DataAccessLayer\DoctrineUserProvider;
@@ -18,11 +19,15 @@ use Ribbit\Controllers\Admin\UserAdminController;
 use Ribbit\Services\SQLLogger\MonologSQLLogger;
 use Ribbit\DataAccessLayer\DoctrineRoleProvider;
 use Ribbit\BusinessLogicLayer\RoleManager;
+use Ribbit\DataAccessLayer\DoctrineRibbitProvider;
+use Ribbit\BusinessLogicLayer\RibbitManager;
 
 $app = new Application();
-### BEGINCUSTOMCODE 
+
 $app["debug"] = true;
-$app["void"]= $app->protect(function(){});
+$app["void"] = $app->protect(function() {
+            
+        });
 $app["current_time"] = function() {
             return date('Y-m-d H:i:s', time());
         };
@@ -36,14 +41,24 @@ $app["user_provider"] = $app->share(function(Application $app) {
             return new DoctrineUserProvider($app["em"]);
         }
 );
-# EN : custom services
 $app["user_manager"] = $app->share(function(Application $app) {
             $userManager = new UserManager($app["user_provider"], $app["security.encoder_factory"]);
             return $userManager;
         }
 );
+$app["ribbit_provider"] = $app->share(function(Application $app) {
+            return new DoctrineRibbitProvider($app["em"]);
+        }
+);
+$app["ribbit_manager"] = $app->share(function(Application $app) {
+            return new RibbitManager($app["ribbit_provider"]);
+        }
+);
 // FR : Enrigistrement des services providers
 // EN : Service providers registration
+$app->register(new MonologServiceProvider(), array(
+    'monolog.logfile' => __DIR__ . '/../log/silex.log',
+));
 $app->register(new FormServiceProvider());
 $app->register(new UrlGeneratorServiceProvider());
 $app->register(new ValidatorServiceProvider());
@@ -69,9 +84,9 @@ $app->register(new DoctrineORMServiceProvider(), array(
         "driver" => getenv("RIBBIT_DRIVER"),
         "memory" => true
     ),
-    "em.logger" => $app->share(function($app) {
-                return new MonologSQLLogger($app["logger"]);
-            }),
+    "em.logger" => function($app) {
+        return new MonologSQLLogger($app["logger"]);
+    },
     "em.metadata" => array(
         "type" => "annotation",
         "path" => array(__DIR__ . $s . "Ribbit" . $s . "Entity" . $s),

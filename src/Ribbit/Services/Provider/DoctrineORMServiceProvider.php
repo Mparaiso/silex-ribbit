@@ -37,10 +37,10 @@ class DoctrineORMServiceProvider implements ServiceProviderInterface {
                         $app["em.metadata"]["path"], $app["em.is_dev_mode"]);
                 };
             }
-            if ($app["debug"] == true) {
+            if ($app["debug"] === true) {
                 $app["em.is_dev_mode"] = true;
             }
-            if ($app['em.logger']) {
+            if ($app['em.logger']!=null) {
                 $app["em.config"]->setSQLLogger($app['em.logger']);
             }
             if ($app["em.proxy_dir"]) {

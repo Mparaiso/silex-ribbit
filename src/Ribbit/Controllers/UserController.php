@@ -32,7 +32,7 @@ class UserController implements ControllerProviderInterface {
                             ->addError(new FormError("email already exists"));
                     $app["session"]->getFlashBag()
                             ->add("error", "email already exists");
-                } else if($registrationForm->isValid ()){
+                } else if ($registrationForm->isValid()) {
                     //$role = $app["role_manager"]->getByTitle("ROLE_USER");
                     $user = new User();
                     $user->setUsername($datas["username"]);

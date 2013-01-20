@@ -3,7 +3,6 @@
 namespace Ribbit\Entity;
 
 use Ribbit\Entity\Ribbit;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Exception\ValidatorException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -13,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @HasLifecycleCallbacks
  * @note @doctrine HasLifecyleCallback active la validation
  * */
-class User implements UserInterface{
+class User implements UserInterface {
 
     /** @Id @Column(type="integer") @GeneratedValue * */
     protected $id;
@@ -33,7 +32,7 @@ class User implements UserInterface{
     /** @Column(type="string",nullable=TRUE) * */
     protected $password;
 
-    /** @Column(type="string") * */
+    /** @Column(type="string",nullable=TRUE) * */
     protected $salt;
 
     /** @Column(type="datetime") * */
@@ -50,18 +49,18 @@ class User implements UserInterface{
 
     /** @ManyToMany(targetEntity="User",mappedBy="followee") */
     protected $followers = null;
-
+    // Many to Many self referencing relationship
     /** @ManyToMany(targetEntity="User",inversedBy="followers") 
      *  @JoinTable(name="follows",joinColumns={@JoinColumn(name="user_id",referencedColumnName="id")},
      *  inverseJoinColumns={@JoinColumn(name="followee_id",referencedColumnName="id")})
      */
     protected $followee = null;
 
-    /** 
+    /**
      * @OneToMany(targetEntity="Ribbit",mappedBy="user")
      * @var Ribbit[]
      */
-    protected $ribbits=null;
+    protected $ribbits = null;
 
     function __construct() {
         $this->roles = new ArrayCollection();
@@ -70,7 +69,6 @@ class User implements UserInterface{
         $this->followers = new ArrayCollection();
     }
 
-    
     function getId() {
         return $this->id;
     }
@@ -113,6 +111,10 @@ class User implements UserInterface{
 
     function getLastLogin() {
         return $this->lastLogin;
+    }
+
+    function getFollowers() {
+        return $this->followers;
     }
 
     function setUsername($val) {
@@ -165,17 +167,17 @@ class User implements UserInterface{
      */
     function createAvatarUrl() {
         $this->avatarUrl =
-        "http://www.gravatar.com/avatar/"
-        . md5($this->email)
-        . "?s=50";
+                "http://www.gravatar.com/avatar/"
+                . md5($this->email)
+                . "?s=50";
     }
 
     public function eraseCredentials() {
         $this->password = null;
     }
 
-    public function addRibbit(Ribbit $ribbit){
-        $this->ribbits[]=$ribbit;
+    public function addRibbit(Ribbit $ribbit) {
+        $this->ribbits[] = $ribbit;
     }
 
 }

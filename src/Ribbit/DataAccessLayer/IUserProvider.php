@@ -18,5 +18,9 @@ interface IUserProvider {
      * @param User $user
      */
     function create(User $user);
+    /**
+     * @return User[]
+     */
+    function get();
 }
 

@@ -37,6 +37,14 @@ class DoctrineUserProvider implements IUserProvider {
         return $user;
     }
 
+    /**
+     * 
+     * @return \Ribbit\Entity\User[]
+     */
+    function get(){
+        return $this->em->getRepository("Ribbit\Entity\User")->findAll();
+    }
+    
     public function getByUsername($username) {
         return $this->em->getRepository($this->user_class)->findOneBy(array("username" => $username));
     }
@@ -45,5 +53,12 @@ class DoctrineUserProvider implements IUserProvider {
         return $this->em->getRepository($this->user_class)->findOneBy(array("email"=>$email));
     }
 
+    function getFollowerCount(User $user){
+        return count($this->getFollowers());
+    }
+    
+    function getFollowers(User $user){
+        return $user->getFollowers();
+    }
 }
 
