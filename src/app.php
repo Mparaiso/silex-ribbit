@@ -26,6 +26,7 @@ use Ribbit\BusinessLogicLayer\RibbitManager;
 $app = new Application();
 
 $app["debug"] = true;
+// redirect user if logged in
 $app["mustBeAnonymous"] = $app->protect(function()use($app){
     if($app["security"]->isGranted('ROLE_USER')){
         return $app->redirect($app["url_generator"]->generate("admin_profile"));
