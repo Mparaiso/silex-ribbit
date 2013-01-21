@@ -28,6 +28,9 @@ powered by PHP, Symfony, Silex and Doctrine ORM
     to index_dev.php for development , or index.php for producion
     in development error will be displayed and you can check application logs in /log/silex.log
 + create the database in mysql
++ go the project root. use the console utility to create tables in the database :
+    + <code>console orm:schema-tool:create</code>
+    + if it doesnt work , use the sql script file located in /database/ribbit.sql to create the database.
 + chmod the following folders to +w : /cache , /log
 + start or restart the server
 
