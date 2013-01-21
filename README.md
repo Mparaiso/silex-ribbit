@@ -6,7 +6,7 @@ powered by PHP, Symfony, Silex and Doctrine ORM
 
 ## Ported to Silex by M.PARAISO : mparaiso@online.fr
 
-## Love Demo : http://mpmedia.alwaysdata.net/ribbit/admin/profile
+## Love Demo : http://mpmedia.alwaysdata.net/ribbit
 
 ### INSTALLATION
 
