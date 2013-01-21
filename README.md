@@ -13,7 +13,7 @@ powered by PHP, Symfony, Silex and Doctrine ORM
 #### Requirements :
 
 + Apache Server : http://httpd.apache.org/
-+ PHP > 5.3 : http://php.net/
++ PHP >= 5.3 : http://php.net/
 + Mysql : http://www.mysql.com/
 + Composer : http://getcomposer.org
 
