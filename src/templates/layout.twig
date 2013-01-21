@@ -9,7 +9,7 @@
     <body>
         <header>
             <div class="wrapper">
-                <a href="{{app.request.basePath}}/"><img src="/gfx/logo.png"></a>
+                <a href="{{app.request.basePath}}/"><img src="{{app.request.basePath}}/gfx/logo.png"></a>
                 <span>Twitter Clone</span>
                 {% block header %}{% endblock %}
             </div>
@@ -26,7 +26,7 @@
             </div>
             <footer>
                 <div class="wrapper">
-                    Ribbit - A Twitter Clone Tutorial<img src="/gfx/logo-nettuts.png">
+                    Ribbit - A Twitter Clone Tutorial<img src="{{app.request.basePath}}/gfx/logo-nettuts.png">
                 </div>
             </footer>
             {%include 'common/google_analytics.twig' %}

@@ -6,3 +6,4 @@
 cli-config.php
 silex.log
 .env.php
+composer.lock
