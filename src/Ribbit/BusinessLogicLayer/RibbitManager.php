@@ -32,7 +32,7 @@ class RibbitManager {
 
     function findFolloweeRibbits(User $user) {
         if ($user->getFollowee()->isEmpty()) {
-            return [];
+            return array();
         } else {
             return $this->ribbitProvider->findFolloweeRibbits($user);
         }
