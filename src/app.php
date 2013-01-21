@@ -25,7 +25,7 @@ use Ribbit\BusinessLogicLayer\RibbitManager;
 
 $app = new Application();
 
-$app["debug"] = true;
+$app["debug"] = getenv("RIBBIT_ENVIRONMENT") == "development" ? true : false ;
 // redirect user if logged in
 $app["mustBeAnonymous"] = $app->protect(function()use($app){
     if($app["security"]->isGranted('ROLE_USER')){
