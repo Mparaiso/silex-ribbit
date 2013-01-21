@@ -5,8 +5,6 @@
  * Allows interacting with the app in the command line interface
  * 
  */
-// env variables
-require_once __DIR__ . '/.env.php';
 // autoloader
 require_once __DIR__ . '/vendor/autoload.php';
 // application

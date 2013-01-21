@@ -1,7 +1,14 @@
 <div class="ribbitWrapper">
     <img class="avatar" src="{{user.getAvatarUrl()}}">
-    <span class="name">{{user.getName()}}</span> @{{user.getUsername()}}
+    <span class="name"><a href="{{path("admin_user",{id:user.getId()})}}">{{user.getName()}}</a></span> @{{user.getUsername()}}
     <p>
          {{ user.getRibbits()|length}} Ribbits <span class="spacing">{{user.getFollowers()|length}} Followers</span><span class="spacing">{{ user.getFollowee()|length}} Following</span><br>
         </p>
+        {% if app.security.getToken().getUser() != user %}
+            {% if app.security.getToken().getUser().getFollowee().contains(user) %}
+                {{ render(path("admin_unfollow",{id:user.getId()}))}}
+            {% else %}
+                {{ render(path("admin_follow",{id:user.getId()}))}}
+            {% endif %}
+        {% endif %}
     </div>

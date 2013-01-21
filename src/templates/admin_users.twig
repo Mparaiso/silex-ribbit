@@ -11,7 +11,7 @@
         </p>
     </div>
     <div id="ribbits" class="panel left">
-        <h1>Public Profile</h1>
+        <h1>Public Profiles</h1>
         {% for user in users %}
             {% include 'profile.twig' with {user:user} only %}
         {% endfor %}

@@ -24,14 +24,20 @@ class DoctrineRibbitProvider implements IRibbitProvider {
         return $ribbit;
     }
 
-    public function findByUser(User $user) {
+    function findByUser(User $user) {
         return $this->em->getRepository("Ribbit\Entity\Ribbit")
-                        ->findBy(array("user" => $user),array("createdAt"=>"DESC"));
+                        ->findBy(array("user" => $user), array("createdAt" => "DESC"));
+    }
+
+    function findFolloweeRibbits(User $user) {
+        $followee = $user->getFollowee()->toArray();
+        return $this->em->getRepository("Ribbit\Entity\Ribbit")
+                        ->findBy(array("user" => $followee), array("createdAt" => "DESC"));
     }
 
     public function findAll() {
         return $this->em->getRepository("Ribbit\Entity\Ribbit")
-                ->findBy(array(),array("createdAt"=>"DESC"));
+                        ->findBy(array(), array("createdAt" => "DESC"));
     }
 
 }

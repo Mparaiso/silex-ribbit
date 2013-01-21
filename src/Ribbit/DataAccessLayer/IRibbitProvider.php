@@ -12,4 +12,5 @@ interface IRibbitProvider{
     function findByUser(User $user);
     function create(Ribbit $ribbit);
     function findAll();
+    function findFolloweeRibbits(User $user);
 }

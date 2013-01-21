@@ -39,7 +39,7 @@ class UserManager implements UserProviderInterface {
         return $this->userProvider->getByUsername($username);
     }
 
-    public function findAll(){
+    public function findAll() {
         return $this->userProvider->findAll();
     }
 
@@ -47,7 +47,7 @@ class UserManager implements UserProviderInterface {
         return $this->userProvider->getByEmail($email);
     }
 
-    function getById($id){
+    function getById($id) {
         return $this->userProvider->getById($id);
     }
 
@@ -55,6 +55,33 @@ class UserManager implements UserProviderInterface {
         return $this->loadUserByUsername($user->getUsername());
     }
 
+    function follow(User $user, $followee_id) {
+        $followee = $this->getById($followee_id);
+        if ($user->getFollowee()->contains($followee)) {
+            throw new Exception("User {$user->getUsername()} \
+                already following user with id $followee_id .");
+        }
+        if ($followee == $user) {
+            throw new Exception("Cant follow yourself.");
+        }
+        $user->addFollowee($followee);
+        $this->userProvider->update($user);
+        return $user;
+    }
+
+    function unfollow(User $user, $followee_id) {
+        $followee = $this->getById($followee_id);
+        if (!$user->getFollowee()->contains($followee)) {
+            throw new Exception("User {$user->getUsername()} \
+                is not following {$followee->getUsername()}.");
+        }
+        if ($followee == $user) {
+            throw new Exception("Cant unfollow yourself.");
+        }
+        $user->removeFollowee($followee);
+        $this->userProvider->update($user);
+        return $user;
+    }
 
     /**
      * 
@@ -66,10 +93,10 @@ class UserManager implements UserProviderInterface {
     }
 
     public function register(User $user) {
-        if($this->getByEmail($user->getEmail())){
+        if ($this->getByEmail($user->getEmail())) {
             throw new \Exception("Email {$user->getEmail()} already taken", 1);
         }
-        if($this->loadUserByUsername($user->getUsername())){
+        if ($this->loadUserByUsername($user->getUsername())) {
             throw new \Exception("Username {$user->getEmail()} already taken", 1);
         }
         $this->setUserSalt($user);

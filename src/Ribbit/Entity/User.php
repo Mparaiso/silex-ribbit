@@ -47,12 +47,17 @@ class User implements UserInterface {
     /** @ManyToMany(targetEntity="Role") * */
     protected $roles = null;
 
-    /** @ManyToMany(targetEntity="User",mappedBy="followee") */
+    /**
+     * @ManyToMany(targetEntity="User",mappedBy="followee") 
+     * @var ArrayCollection;
+     */
     protected $followers = null;
     // Many to Many self referencing relationship
-    /** @ManyToMany(targetEntity="User",inversedBy="followers") 
-     *  @JoinTable(name="follows",joinColumns={@JoinColumn(name="user_id",referencedColumnName="id")},
+    /**
+     * @ManyToMany(targetEntity="User",inversedBy="followers") 
+     * @JoinTable(name="follows",joinColumns={@JoinColumn(name="user_id",referencedColumnName="id")},
      *  inverseJoinColumns={@JoinColumn(name="followee_id",referencedColumnName="id")})
+     * @var ArrayCollection
      */
     protected $followee = null;
 
@@ -67,6 +72,16 @@ class User implements UserInterface {
         $this->ribbits = new ArrayCollection();
         $this->followee = new ArrayCollection();
         $this->followers = new ArrayCollection();
+    }
+
+    function addFollowee(User $user) {
+        $this->followee[] = $user;
+        return $this;
+    }
+
+    function removeFollowee(User $user) {
+        $this->followee->removeElement($user);
+        return $this;
     }
 
     function getId() {
@@ -104,12 +119,16 @@ class User implements UserInterface {
     function getCreatedAt() {
         return $this->createdAt;
     }
-    
-    function getRibbits(){
+
+    function getRibbits() {
         return $this->ribbits;
     }
-    
-    function getFollowee(){
+
+    /**
+     * 
+     * @return ArrayCollection
+     */
+    function getFollowee() {
         return $this->followee;
     }
 
@@ -121,6 +140,10 @@ class User implements UserInterface {
         return $this->lastLogin;
     }
 
+    /**
+     * 
+     * @return ArrayCollection
+     */
     function getFollowers() {
         return $this->followers;
     }
@@ -181,11 +204,13 @@ class User implements UserInterface {
     }
 
     public function eraseCredentials() {
-       // $this->password = null;
+        // $this->password = null;
     }
 
-    public function addRibbit(Ribbit $ribbit) {
+    function addRibbit(Ribbit $ribbit) {
         $this->ribbits[] = $ribbit;
     }
+    
+  
 
 }

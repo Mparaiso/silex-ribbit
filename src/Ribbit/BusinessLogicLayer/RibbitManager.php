@@ -11,25 +11,35 @@ use Ribbit\Entity\User;
 use Ribbit\DataAccessLayer\IRibbitProvider;
 
 class RibbitManager {
+
     /**
      * @var \Ribbit\DataAccessLayer\IRibbitProvider $ribbitProvider
      */
     protected $ribbitProvider;
-    
+
     public function __construct(IRibbitProvider $ribbitProvider) {
         $this->ribbitProvider = $ribbitProvider;
     }
-    
-    public function create(Ribbit $ribbit){
+
+    public function create(Ribbit $ribbit) {
         $ribbit->setCreatedAt(new \DateTime("now"));
         return $this->ribbitProvider->create($ribbit);
     }
-    
-    function findAll(){
+
+    function findAll() {
         return $this->ribbitProvider->findAll();
     }
-    
-    public function findByUser(User $user){
+
+    function findFolloweeRibbits(User $user) {
+        if ($user->getFollowee()->isEmpty()) {
+            return [];
+        } else {
+            return $this->ribbitProvider->findFolloweeRibbits($user);
+        }
+    }
+
+    public function findByUser(User $user) {
         return $this->ribbitProvider->findByUser($user);
     }
+
 }

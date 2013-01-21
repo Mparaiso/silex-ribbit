@@ -83,8 +83,10 @@ $console->register('ribbit:user-password-change')
                     }
                 }
 );
-// EN : create roles
-// FR : créer des roles
+/**
+ * EN : create roles
+ * FR : créer des roles
+ */
 $console->register("ribbit:create-role")
         ->setDefinition(array(
             new InputOption("title", "t", InputOption::VALUE_REQUIRED, "role's title"),
