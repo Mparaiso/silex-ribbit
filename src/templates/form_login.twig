@@ -2,14 +2,15 @@
 <div>{{ error }}</div>
 {% endif %}
 <form action="{{path('users_authenticate')}}" method="POST">
-  <input placeholder="login" 
+  <input placeholder="login" style="width:190px;"
   type="text" id="username" name="_username" 
   value="{{last_username | default("") }}" />
   <input placeholder="password" type="password" 
-  id="password" 
+  id="password" style="width:190px;"
   name="_password" />
+        <input  type="submit" value="login"/>
   {# @note @silex FR : controller l'url en cas de success <input type="hidden" name="_target_path"  value="account" /> #}
   <input type="hidden" name="login_failed_forward" 
   value="{{login_failed_forward | default('home')}}">
-  <input style="width:0;height:0;border:none;" type="submit" value="submit"/>
+
 </form>
