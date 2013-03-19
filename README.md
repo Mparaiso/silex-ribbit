@@ -6,8 +6,7 @@ powered by PHP, Symfony, Silex and Doctrine ORM
 
 ## Ported to Silex by M.PARAISO : mparaiso@online.fr
 
-## Live Demo : http://mpmedia.alwaysdata.net/ribbit
-
+## Live Demo :  http://silex-ribbit.herokuapp.com/
 ### INSTALLATION
 
 #### Requirements :
