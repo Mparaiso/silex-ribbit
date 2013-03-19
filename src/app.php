@@ -149,7 +149,11 @@ $app->error(function (\Exception $e, $code) use ($app) {
     return new Response($app['twig']->render($page, array('code' => $code)), $code);
 });
 
-$app->mount("/users", new UserController);
+$app["user_controller"]=$app->share(function($app){
+return new UserController;
+});
+
+$app->mount("/users", $app["user_controller"]);
 $app->mount("/admin/ribbit",new RibbitController);
 $app->mount("/admin", new AdminController);
 $app->mount("/", new IndexController);
