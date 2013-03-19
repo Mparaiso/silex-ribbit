@@ -64,7 +64,7 @@ $app["ribbit_manager"] = $app->share(function(Application $app) {
 // FR : Enrigistrement des services providers
 // EN : Service providers registration
 $app->register(new MonologServiceProvider(), array(
-    'monolog.logfile' => __DIR__ . '/../log/silex.log',
+    'monolog.logfile' => __DIR__ . '/../temp/'.date("Y:m:d").'.log',
     ));
 $app->register(new FormServiceProvider());
 $app->register(new UrlGeneratorServiceProvider());
@@ -74,7 +74,7 @@ $app->register(new TranslationServiceProvider(), array(
     ));
 $app->register(new TwigServiceProvider(), array(
     'twig.path' => array(__DIR__ . '/templates'),
-    'twig.options' => array('cache' => __DIR__ . '/../cache'),
+    'twig.options' => array('cache' => __DIR__ . '/../temp/twig'),
     ));
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
                     // add custom globals, filters, tags, ...

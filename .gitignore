@@ -1,9 +1,8 @@
 /vendor/
-/cache/
-/log/
+/cache/*
+/log/*
 /nbproject/
 /web/info.php
 cli-config.php
-silex.log
 .env.php
 composer.lock
